@@ -1,24 +1,27 @@
-Q = 2**64 - 1
-X = 2
+
 
 def hash(s):
     n = len(s)
     sum = 0
     for i in range(0, n):
-        sum += ord(s[i]) * X**(n-(i+1))
-    return sum % Q
+        sum += ord(s[i]) * 2**(i+1)
+    return sum
 
-def Rabin_Karp(s, sub): #возвращает индекс первого вхождения подстроки sub в строку s или -1 
+def Rabin_Karp(s, sub): #возвращает список индексов вхождений подстроки sub в строку s
+    ind = []
     n = len(s)
     m = len(sub)
     hs = hash(s[:m])
     hsub = hash(sub)
-    for i in range(0, n - m + 1):
-       print(hs, hsub) 
-       if hs == hsub:
-           return i
-       hs = ((hs - (ord(s[i]) * X**(m-1+i)) * X + ord(s[m+i]) % Q)) % Q
-       hs = hash(s[i+1:m+i+1]) 
-    return -1
+    for i in range(0, n - m):
+        if hs == hsub:
+            ind += [i]
+        hs = (hs - 2*ord(s[i])) // 2 + ord(s[m+i]) * 2**m
+    if hs == hsub:
+        ind += [i+1]    
+    return ind
+
+
+print(Rabin_Karp('abcefadbcghabcdabcd', 'abcd'))
 
 
